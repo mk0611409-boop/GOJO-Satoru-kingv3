@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👑 GOJO SATRO KING | The Honored One</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #05020a;
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        .title-font { font-family: 'Cinzel', serif; }
+        .gold-text { 
+            color: #fbbf24; 
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.8), 0 0 30px rgba(251, 191, 36, 0.4); 
+        }
+        .glass {
+            background: rgba(15, 10, 25, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: inset 0 0 20px rgba(139, 92, 246, 0.1);
+        }
+        
+        /* خلفية النجوم */
+        #starfield {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #1B0B2E 0%, #05020a 100%);
+        }
+
+        /* شاشة التحميل */
+        #loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #05020a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease-out;
+        }
+        .loader-text {
+            font-family: 'Cinzel', serif;
+            color: #8b5cf6;
+            font-size: 1.5rem;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; text-shadow: 0 0 10px #8b5cf6; }
+            50% { opacity: 0.5; text-shadow: none; }
+        }
+
+        /* توهج الصورة */
+        .avatar-glow {
+            box-shadow: 0 0 50px rgba(139, 92, 246, 0.6), 0 0 100px rgba(139, 92, 246, 0.3);
+            transition: transform 0.5s ease;
+        }
+        .avatar-glow:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- شاشة التحميل -->
+    <div id="loader">
+        <div class="loader-text">Entering The Domain...</div>
+    </div>
+
+    <!-- خلفية النجوم -->
+    <div id="starfield"></div>
+
+    <header class="text-center mt-16 px-4 w-full flex flex-col items-center relative z-10">
+        <div class="w-48 h-48 md:w-56 md:h-56 rounded-full border-2 border-purple-500 avatar-glow overflow-hidden mb-6 relative">
+            <img src="https://upload.wikimedia.org/wikipedia/en/2/2f/Satoru_Gojo.png" 
+                 alt="Gojo Satoru" 
+                 class="w-full h-full object-cover">
+        </div>
+        
+        <h1 class="title-font text-4xl md:text-7xl gold-text mb-2 text-center tracking-widest">
+            👑 GOJO SATRO KING 👑
+        </h1>
+        <p class="text-gray-300 text-sm md:text-lg max-w-xl mx-auto text-center font-medium tracking-wide">
+            The Strongest. The Honored One. <br>
+            <span class="text-purple-400 text-xs md:text-sm mt-2 block">Ask the Six Eyes Oracle anything about the anime world.</span>
+        </p>
+    </header>
+
+    <!-- قسم الذكاء الاصطناعي -->
+    <section class="w-full max-w-2xl mt-12 px-4 mb-10 relative z-10">
+        <div class="glass rounded-2xl p-6 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-80"></div>
+
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="title-font text-2xl text-purple-400 flex items-center gap-2">
+                    <span>🔮</span> The Six Eyes Oracle
+                </h2>
+                <button onclick="toggleApiKey()" class="text-gray-500 hover:text-purple-400 transition" title="Secret Config">
+                    ⚙️
+                </button>
+            </div>
+            
+            <div id="api-key-container" class="hidden mb-4 transition-all duration-300">
+                <input type="password" id="api-key-input" placeholder="Enter your OpenRouter API Key (sk-or-...)" 
+                       class="w-full bg-black/50 border border-purple-500/30 rounded-lg p-2 text-xs text-purple-300 focus:outline-none focus:border-purple-500">
+                <p class="text-[10px] text-gray-500 mt-1">Your key is safe and stored locally.</p>
+            </div>
+
+            <div id="chat-box" class="h-72 overflow-y-auto mb-4 bg-black/40 border border-gray-800 p-4 rounded-xl flex flex-col space-y-3 text-sm scrollbar-thin">
+                <div class="text-gray-400 italic">> Oracle is ready. Ask your question, mortal.</div>
+            </div>
+
+            <div class="flex gap-2">
+                <input type="text" id="user-input" 
+                       placeholder="Type your question here..." 
+                       class="flex-1 bg-black/60 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-purple-500 transition-colors">
+                <button onclick="askOracle()" 
+                        class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-[0_0_15px_rgba(139,92,246,0.5)]">
+                    Ask
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم مستكشف الشخصيات -->
+    <section class="w-full max-w-4xl mt-4 px-4 mb-10 relative z-10">
+        <h2 class="title-font text-3xl text-purple-400 text-center mb-6">⚔️ Sorcerer Database</h2>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <button onclick="showCharacter('gojo')" class="glass p-3 rounded-xl hover:border-purple-500 transition-all font-bold text-gold-text">Satoru Gojo</button>
+            <button onclick="showCharacter('sukuna')" class="glass p-3 rounded-xl hover:border-red-500 transition-all font-bold text-red-500">Ryomen Sukuna</button>
+            <button onclick="showCharacter('megumi')" class="glass p-3 rounded-xl hover:border-blue-500 transition-all font-bold text-blue-400">Megumi Fushiguro</button>
+            <button onclick="showCharacter('yuji')" class="glass p-3 rounded-xl hover:border-pink-500 transition-all font-bold text-pink-400">Yuji Itadori</button>
+        </div>
+
+        <div id="character-card" class="glass rounded-2xl p-6 hidden relative overflow-hidden transition-all duration-500">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500 blur-[100px] opacity-30"></div>
+            
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 id="char-name" class="title-font text-3xl text-white mb-1"></h3>
+                    <p id="char-title" class="text-sm text-gray-400"></p>
+                </div>
+                <div class="text-center">
+                    <span class="block text-2xl" id="char-grade"></span>
+                    <span class="text-xs text-gray-500">Grade</span>
+                </div>
+            </div>
+
+            <div class="space-y-4 mt-6">
+                <div>
+                    <span class="text-purple-400 text-sm font-bold">Innate Technique:</span>
+                    <p id="char-technique" class="text-gray-200 text-sm"></p>
+                </div>
+                <div>
+                    <span class="text-purple-400 text-sm font-bold">Domain Expansion:</span>
+                    <p id="char-domain" class="text-gray-200 text-sm"></p>
+                </div>
+                
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-purple-400 font-bold">Cursed Energy Level</span>
+                        <span id="char-power-text" class="text-gold-text font-bold"></span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-2.5">
+                        <div id="char-power-bar" class="bg-gradient-to-r from-purple-600 to-gold-text h-2.5 rounded-full transition-all duration-1000" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم اختبار الجوجوتسو -->
+    <section class="w-full max-w-2xl mt-4 px-4 mb-20 relative z-10">
+        <div class="glass rounded-2xl p-6 relative overflow-hidden">
+            <h2 class="title-font text-3xl text-gold-text text-center mb-2">⚡ Cursed Energy Test</h2>
+            <p class="text-center text-gray-400 text-sm mb-6">Discover your true potential. Are you a Special Grade?</p>
+            
+            <div id="test-start-screen" class="text-center">
+                <button onclick="startTest()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(239,68,68,0.5)]">
+                    Start Test
+                </button>
+            </div>
+
+            <div id="test-question-screen" class="hidden">
+                <p id="test-question-text" class="text-xl text-white mb-6 text-center"></p>
+                <div id="test-options" class="flex flex-col gap-3">
+                </div>
+            </div>
+
+            <div id="test-result-screen" class="hidden text-center">
+                <h3 id="result-grade" class="text-4xl font-bold mb-2"></h3>
+                <p id="result-desc" class="text-gray-300"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- مكتبة الجسيمات للنجوم -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+        // 1. إخفاء شاشة التحميل
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 1000);
+            }, 2000);
+        });
+
+        // 2. تشغيل خلفية النجوم
+        particlesJS("starfield", {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": ["#8b5cf6", "#fbbf24", "#ffffff"] },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1 } },
+                "size": { "value": 2, "random": true, "anim": { "enable": true, "speed": 2, "size_min": 0.1 } },
+                "line_linked": { "enable": false },
+                "move": { "enable": true, "speed": 0.5, "direction": "none", "random": true, "straight": false, "out_mode": "out" }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "bubble" }, "onclick": { "enable": true, "mode": "push" } },
+                "modes": { "bubble": { "distance": 100, "size": 4, "duration": 2 }, "push": { "particles_nb": 4 } }
+            },
+            "retina_detect": true
+        });
+
+        // 3. إظهار وإخفاء مربع المفتاح
+        function toggleApiKey() {
+            const container = document.getElementById('api-key-container');
+            container.classList.toggle('hidden');
+        }
+
+        // 4. محرك الذكاء الاصطناعي
+        async function askOracle() {
+            const input = document.getElementById('user-input');
+            const chatBox = document.getElementById('chat-box');
+            const keyInput = document.getElementById('api-key-input').value.trim();
+            const question = input.value.trim();
+
+            if (!question) return;
+            
+            if (!keyInput) {
+                document.getElementById('api-key-container').classList.remove('hidden');
+                chatBox.innerHTML += `<div class="text-red-400 bg-red-900/20 p-2 rounded-lg text-xs">> System requires API Key. Please click the ⚙️ icon to configure.</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+                return;
+            }
+
+            chatBox.innerHTML += `<div class="text-right text-purple-200 bg-purple-900/30 p-2 rounded-lg self-end max-w-[85%]"><strong>You:</strong> ${question}</div>`;
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const loadingId = "loading-" + Date.now();
+            chatBox.innerHTML += `<div id="${loadingId}" class="text-gray-500 animate-pulse text-xs">> The Six Eyes are analyzing...</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${keyInput}`,
+                        "HTTP-Referer": "https://github.com", 
+                        "X-Title": "Gojo Satro King" 
+                    },
+                    body: JSON.stringify({
+                        model: "openrouter/free", // الراوتر المجاني
+                        messages: [
+                            { 
+                              role: "system", 
+                              content: "أنت الـ Six Eyes Oracle الخاص بـ GOJO SATRO KING. أجب على أسئلة الأنمي بدقة، وبتفاصيل، وبنبرة ملكية واثقة ومتعجرفة مثل جوجو ساتورو. إذا كان المستخدم يسأل بالعربية، أجب بالعربية. وإذا لم تكن تعرف الإجابة، قل ذلك بوضوح." 
+                            },
+                            { role: "user", content: question }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+                
+                if(data.error) throw new Error(data.error.message);
+                
+                const answer = data.choices[0].message.content;
+
+                document.getElementById(loadingId).remove();
+                chatBox.innerHTML += `<div class="text-gray-300 bg-gray-800/60 p-2 rounded-lg max-w-[85%]"><strong>Oracle:</strong> ${answer}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                chatBox.innerHTML += `<div class="text-red-400 bg-red-900/20 p-2 rounded-lg text-xs">> Error: ${error.message}</div>`;
+            }
+        }
+
+        document.getElementById('user-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') askOracle();
+        });
+
+        // 5. دالة مستكشف الشخصيات
+        function showCharacter(charId) {
+            const card = document.getElementById('character-card');
+            const name = document.getElementById('char-name');
+            const title = document.getElementById('char-title');
+            const grade = document.getElementById('char-grade');
+            const technique = document.getElementById('char-technique');
+            const domain = document.getElementById('char-domain');
+            const powerText = document.getElementById('char-power-text');
+            const powerBar = document.getElementById('char-power-bar');
+
+            const characters = {
+                'gojo': { name: "Satoru Gojo", title: "The Honored One", grade: "👑 Special Grade", technique: "Limitless (Infinity, Blue, Red, Hollow Purple)", domain: "Unlimited Void", power: 100 },
+                'sukuna': { name: "Ryomen Sukuna", title: "King of Curses", grade: "👑 Special Grade", technique: "Dismantle, Cleave, Malevolent Shrine", domain: "Malevolent Shrine", power: 98 },
+                'megumi': { name: "Megumi Fushiguro", title: "Ten Shadows User", grade: "Grade 2 (Potential Special)", technique: "Ten Shadows Technique (Divine Dogs, Mahoraga)", domain: "Chimera Shadow Garden", power: 85 },
+                'yuji': { name: "Yuji Itadori", title: "Sukuna's Vessel", grade: "Grade 1", technique: "Divergent Fist, Black Flash", domain: "None (Yet)", power: 80 }
+            };
+
+            const data = characters[charId];
+            if(!data) return;
+
+            card.classList.remove('hidden');
+            name.textContent = data.name;
+            title.textContent = data.title;
+            grade.textContent = data.grade;
+            technique.textContent = data.technique;
+            domain.textContent = data.domain;
+            powerText.textContent = data.power + "%";
+            
+            powerBar.style.width = '0%';
+            setTimeout(() => { powerBar.style.width = data.power + '%'; }, 100);
+        }
+
+        // 6. محرك اختبار الجوجوتسو
+        let currentQuestion = 0;
+        let score = 0;
+        
+        const testQuestions = [
+            { q: "A Grade 2 curse appears in front of you. What is your first reaction?", options: [ { text: "Run and call for backup.", score: 1 }, { text: "Fight it head-on with my bare hands.", score: 3 }, { text: "Analyze its weakness and strike with cursed energy.", score: 5 } ] },
+            { q: "If you had to choose a Cursed Technique, which one fits you?", options: [ { text: "A defensive technique to protect others.", score: 2 }, { text: "An offensive technique to destroy everything.", score: 4 }, { text: "Limitless. I am the strongest.", score: 5 } ] },
+            { q: "Your friend is heavily injured in battle. What do you do?", options: [ { text: "Carry them and retreat immediately.", score: 2 }, { text: "Hold off the enemy alone while they escape.", score: 4 }, { text: "Unleash my Domain Expansion to wipe them out.", score: 5 } ] }
+        ];
+
+        function startTest() {
+            document.getElementById('test-start-screen').classList.add('hidden');
+            document.getElementById('test-question-screen').classList.remove('hidden');
+            currentQuestion = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const questionData = testQuestions[currentQuestion];
+            document.getElementById('test-question-text').textContent = questionData.q;
+            const optionsContainer = document.getElementById('test-options');
+            optionsContainer.innerHTML = ''; 
+            
+            questionData.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "bg-gray-800 hover:bg-purple-900 text-white border border-gray-700 hover:border-purple-500 py-3 px-4 rounded-lg text-left transition-all text-sm";
+                btn.textContent = opt.text;
+                btn.onclick = () => {
+                    score += opt.score;
+                    currentQuestion++;
+                    if (currentQuestion < testQuestions.length) {
+                        loadQuestion();
+                    } else {
+                        showTestResult();
+                    }
+                };
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function showTestResult() {
+            document.getElementById('test-question-screen').classList.add('hidden');
+            document.getElementById('test-result-screen').classList.remove('hidden');
+            const gradeEl = document.getElementById('result-grade');
+            const descEl = document.getElementById('result-desc');
+
+            if (score >= 13) {
+                gradeEl.textContent = "👑 SPECIAL GRADE 👑";
+                gradeEl.className = "text-4xl font-bold mb-2 text-gold-text animate-pulse";
+                descEl.textContent = "You possess the cursed energy of a monster. The Higher-Ups fear you. You are the Honored One.";
+            } else if (score >= 8) {
+                gradeEl.textContent = "⚔️ GRADE 1 SORCERER ⚔️";
+                gradeEl.className = "text-4xl font-bold mb-2 text-purple-400";
+                descEl.textContent = "You are a skilled and powerful sorcerer. You can handle most curses with ease.";
+            } else {
+                gradeEl.textContent = "🩹 GRADE 3 SORCERER 🩹";
+                gradeEl.className = "text-4xl font-bold mb-2 text-gray-400";
+                descEl.textContent = "You have potential, but you need more training. Stay away from Special Grades for now.";
+            }
+            
+            setTimeout(() => {
+                descEl.innerHTML += `<br><br><button onclick="location.reload()" class="text-xs text-gray-500 hover:text-white underline">Restart Test</button>`;
+            }, 500);
+        }
+    </script>
+</body>
+              </html>
